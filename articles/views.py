@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from articles.models import Article
@@ -26,7 +27,8 @@ def index(request):
         serializer = ArticleSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             print(serializer.error_messages)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             # return Response(serializer.error_messages) | 보안상 이유로 Front에서 어떤 이유로 에러가 났는지 확인이 가능하기 때문에 해당 코드는 지양
